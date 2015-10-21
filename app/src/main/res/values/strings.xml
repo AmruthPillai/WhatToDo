@@ -1,4 +1,7 @@
 <resources>
-    <string name="app_name">WhatToDo</string>
+    <string name="app_name">What To Do?</string>
     <string name="action_settings">Settings</string>
+
+    <string name="dialog_new_task_label_title">Title</string>
+    <string name="dialog_new_task_label_description">Description</string>
 </resources>
