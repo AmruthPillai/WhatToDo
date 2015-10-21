@@ -6,41 +6,37 @@
     android:orientation="vertical"
     android:padding="@dimen/activity_vertical_margin">
 
-    <TextView
-        android:id="@+id/label_taskTitle"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:labelFor="@+id/edit_taskTitle"
-        android:text="@string/dialog_new_task_label_title"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp">
 
-    <EditText
-        android:id="@+id/edit_taskTitle"
+        <EditText
+            android:id="@+id/edit_taskTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Title"
+            android:inputType="text" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/label_taskTitle"
-        android:inputType="text" />
+        android:layout_below="@+id/view"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp">
 
-    <TextView
-        android:id="@+id/label_taskDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/edit_taskTitle"
-        android:layout_marginTop="10dp"
-        android:labelFor="@+id/edit_taskDescription"
-        android:text="@string/dialog_new_task_label_description"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        <EditText
+            android:id="@+id/edit_taskDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Description"
+            android:inputType="textMultiLine" />
 
-    <EditText
-        android:id="@+id/edit_taskDescription"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/label_taskDescription"
-        android:inputType="textMultiLine" />
+    </android.support.design.widget.TextInputLayout>
 
 </RelativeLayout>
