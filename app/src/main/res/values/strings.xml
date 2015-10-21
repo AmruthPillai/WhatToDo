@@ -2,6 +2,9 @@
     <string name="app_name">What To Do?</string>
     <string name="action_settings">Settings</string>
 
+    <string name="parse_application_id">OtS0RflgUoM13FjeWbtL4BxemkAniHwVbLzVBfRK</string>
+    <string name="parse_client_id">EoBDlBpMyh6ZduBdXUnPAQTFyX3wtb5IwhQjjE48</string>
+
     <string name="dialog_new_task_label_title">Title</string>
     <string name="dialog_new_task_label_description">Description</string>
 </resources>

@@ -11,25 +11,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.parse.Parse;
+import com.parse.FindCallback;
 import com.parse.ParseAnalytics;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
-public class TodoActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
 
-    // Parse Application ID for WhatToDo
-    final String WhatToDoApplicationID = "OtS0RflgUoM13FjeWbtL4BxemkAniHwVbLzVBfRK";
-    // Parse Client ID for WhatToDo
-    final String WhatToDoClientID = "EoBDlBpMyh6ZduBdXUnPAQTFyX3wtb5IwhQjjE48";
+public class TodoActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+
     // Layout Variables
     ListView taskList;
     EditText editTaskTitle, editTaskDescription;
-    Button buttonAddNewTask, buttonDismiss;
+    TaskAdapter taskAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +41,11 @@ public class TodoActivity extends AppCompatActivity {
 
         // Initializing Layout Variables
         taskList = (ListView) findViewById(R.id.list_task);
+        taskAdapter = new TaskAdapter(this, new ArrayList<Task>());
+        taskList.setAdapter(taskAdapter);
 
         // Register the Task Class with Activity
         ParseObject.registerSubclass(Task.class);
-
-        // Initialize the Parse Application
-        Parse.initialize(this, WhatToDoApplicationID, WhatToDoClientID);
 
         // Analytics and Statistics for the App Usage by Parse
         // Tracks this application being launched (and if this happened as the result of the user opening a push notification, this method sends along information to correlate this open with that push).
@@ -56,41 +56,49 @@ public class TodoActivity extends AppCompatActivity {
             @Override
             public void onClick(final View view) {
 
-                final AlertDialog.Builder alertDialogBuilder;
-                final AlertDialog alertDialog;
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(TodoActivity.this);
+                AlertDialog alertDialog;
 
                 LayoutInflater layoutInflater = (LayoutInflater)
                         TodoActivity.this.getSystemService(LAYOUT_INFLATER_SERVICE);
-                final View layoutView = layoutInflater.inflate(R.layout.dialog_new_task,
+                View layoutView = layoutInflater.inflate(R.layout.dialog_new_task,
                         (ViewGroup) findViewById(R.id.relativeLayout_dialogNewTask));
 
                 editTaskTitle = (EditText) layoutView.findViewById(R.id.edit_taskTitle);
                 editTaskDescription = (EditText) layoutView.findViewById(R.id.edit_taskDescription);
 
-                alertDialogBuilder = new AlertDialog.Builder(TodoActivity.this);
                 alertDialogBuilder.setView(layoutView)
                         .setPositiveButton("Add New Task", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                createTask(layoutView, editTaskTitle.getText().toString(), editTaskDescription.getText().toString());
+                                createTask(editTaskTitle.getText().toString(), editTaskDescription.getText().toString());
                             }
                         })
                         .setNegativeButton("Dismiss", null);
 
                 alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
+
             }
         });
+
+        // Initialize the Listeners to Listen for Clicks and Long Clicks
+        taskList.setOnItemClickListener(this);
+
+        // Call data from Parse as soon as onCreate ends
+        updateData();
     }
 
-    public void createTask(View v, String taskTitle, String taskDescription) {
+    public void createTask(String taskTitle, String taskDescription) {
         if (taskTitle.length() > 0) {
+
             Task taskObject = new Task();
 
             // Set a title for the task and set it to be completed later
             taskObject.setTitle(taskTitle);
             taskObject.setDescription(taskDescription);
-            taskObject.setCompleted(false);
+
+            taskAdapter.insert(taskObject, 0);
 
             // saveEventually() is is a convenience method from Parse, that will queue this object to be saved.
             // That way, if the user does not have a network connection, the task will be uploaded later when they are back online
@@ -100,6 +108,46 @@ public class TodoActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "You forgot to enter a title!" + taskDescription,
                     Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void updateData() {
+        ParseQuery<Task> parseQuery = ParseQuery.getQuery(Task.class);
+        parseQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
+        parseQuery.findInBackground(new FindCallback<Task>() {
+
+            @Override
+            public void done(List<Task> taskItemList, ParseException e) {
+                if (taskItemList != null) {
+                    taskAdapter.clear();
+                    taskAdapter.addAll(taskItemList);
+                }
+            }
+
+        });
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        final Task taskObject = taskAdapter.getItem(position);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(TodoActivity.this);
+        AlertDialog alertDialog;
+
+        alertDialogBuilder
+                .setTitle("Delete Task")
+                .setMessage("Are you sure you want to delete this task?")
+                .setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        taskAdapter.remove(taskObject);
+                        taskAdapter.notifyDataSetChanged();
+                        taskObject.deleteEventually();
+                    }
+                })
+                .setNegativeButton("Dismiss", null);
+
+        alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     @Override
@@ -123,4 +171,5 @@ public class TodoActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

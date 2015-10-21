@@ -14,9 +14,8 @@ import java.util.UUID;
     --------------------------
     | String:     taskID
     | String:     title
+    | String:     description
     | String:     author
-    | boolean:    isDraft
-    | boolean:    isCompleted
     --------------------------
 */
 
@@ -68,24 +67,6 @@ public class Task extends ParseObject {
         put("author", currentUser);
     }
 
-    // Check if Task is in Draft Mode
-    public boolean isDraft() {
-        return getBoolean("isDraft");
-    }
 
-    // Set Task to Draft Mode
-    public void setDraft(boolean isDraft) {
-        put("isDraft", isDraft);
-    }
-
-    // Check if Task is Completed
-    public boolean isCompleted() {
-        return getBoolean("completed");
-    }
-
-    // Set a Task to Completed State
-    public void setCompleted(boolean complete) {
-        put("completed", complete);
-    }
 
 }

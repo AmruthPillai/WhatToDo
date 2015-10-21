@@ -7,7 +7,7 @@
     android:padding="@dimen/activity_vertical_margin">
 
     <TextView
-        android:id="@+id/text_taskTitle"
+        android:id="@+id/label_taskTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -21,11 +21,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/text_taskTitle"
+        android:layout_below="@+id/label_taskTitle"
         android:inputType="text" />
 
     <TextView
-        android:id="@+id/text_taskDescription"
+        android:id="@+id/label_taskDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/text_taskDescription"
+        android:layout_below="@+id/label_taskDescription"
         android:inputType="textMultiLine" />
 
 </RelativeLayout>
