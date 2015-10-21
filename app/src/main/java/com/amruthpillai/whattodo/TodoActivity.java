@@ -18,10 +18,12 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
+import com.parse.ParseACL;
 import com.parse.ParseAnalytics;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,14 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
 
         // Register the Task Class with Activity
         ParseObject.registerSubclass(Task.class);
+
+        // Check if a User is Logged In
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        if (currentUser == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
         // Analytics and Statistics for the App Usage by Parse
         // Tracks this application being launched (and if this happened as the result of the user opening a push notification, this method sends along information to correlate this open with that push).
@@ -95,6 +105,10 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
 
             Task taskObject = new Task();
 
+            // Set User Access Ownership Settings
+            taskObject.setACL(new ParseACL(ParseUser.getCurrentUser()));
+            taskObject.setUser(ParseUser.getCurrentUser());
+
             // Set a title for the task and set it to be completed later
             taskObject.setTitle(taskTitle);
             taskObject.setDescription(taskDescription);
@@ -113,6 +127,7 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
 
     public void updateData() {
         ParseQuery<Task> parseQuery = ParseQuery.getQuery(Task.class);
+        parseQuery.whereEqualTo("user", ParseUser.getCurrentUser());
         parseQuery.setCachePolicy(ParseQuery.CachePolicy.CACHE_THEN_NETWORK);
         parseQuery.findInBackground(new FindCallback<Task>() {
 
@@ -160,22 +175,15 @@ public class TodoActivity extends AppCompatActivity implements AdapterView.OnIte
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        Intent intent;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_login) {
-            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivityForResult(intent, 0);
-            return true;
-        } else if (id == R.id.action_signup) {
-            Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-            startActivityForResult(intent, 0);
-            return true;
-        } else if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_logout:
+                ParseUser.logOut();
+                intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);

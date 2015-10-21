@@ -19,7 +19,7 @@
             android:layout_marginBottom="24dp"
             android:src="@mipmap/wtd_logo" />
 
-        <!--  Name Label -->
+        <!--  Username Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,27 +27,11 @@
             android:layout_marginTop="8dp">
 
             <EditText
-                android:id="@+id/input_name"
+                android:id="@+id/input_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Name"
-                android:inputType="textCapWords" />
-
-        </android.support.design.widget.TextInputLayout>
-
-        <!-- Email Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
-
-            <EditText
-                android:id="@+id/input_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Email"
-                android:inputType="textEmailAddress" />
+                android:hint="Username"
+                android:inputType="text" />
 
         </android.support.design.widget.TextInputLayout>
 
@@ -71,7 +55,7 @@
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_signup"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_marginBottom="24dp"
             android:layout_marginTop="24dp"
             android:padding="12dp"
@@ -84,7 +68,7 @@
             android:layout_marginBottom="24dp"
             android:gravity="center"
             android:text="Already a member? Login"
-            android:textSize="16dip" />
+            android:textSize="14dip" />
 
     </LinearLayout>
 
